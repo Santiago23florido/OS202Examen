@@ -1,0 +1,61 @@
+\section{Caract\'eristiques de l'environnement}
+
+Le Tableau~\ref{tab:cpu-general} regroupe les informations g\'en\'erales sur
+l'architecture processeur visibles depuis WSL.
+
+\begin{table}[!t]
+\caption{Informations g\'en\'erales du processeur}
+\label{tab:cpu-general}
+\centering
+\small
+\begin{tabular}{p{0.43\columnwidth} p{0.47\columnwidth}}
+\toprule
+\textbf{Champ} & \textbf{Valeur} \\
+\midrule
+Architecture & x86\_64 \\
+Modes d'op\'eration CPU & 32-bit, 64-bit \\
+Tailles d'adressage & 46 bits physiques, 48 bits virtuels \\
+Ordre des octets & Little Endian \\
+Nombre de CPU logiques & 16 \\
+Liste des CPU en ligne & 0-15 \\
+Identifiant du fabricant & GenuineIntel \\
+Nom du mod\`ele & Intel(R) Core(TM) Ultra 7 155H \\
+Famille CPU & 6 \\
+Mod\`ele & 170 \\
+Threads par coeur & 2 \\
+Coeurs par socket & 8 \\
+Sockets & 1 \\
+Stepping & 4 \\
+BogoMIPS & 5990.39 \\
+Virtualisation & VT-x \\
+Fournisseur de l'hyperviseur & Microsoft \\
+Type de virtualisation & full \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Le Tableau~\ref{tab:cpu-cache} pr\'esente les informations de cache et
+d'organisation NUMA disponibles dans la m\^eme sortie \texttt{lscpu}.
+
+\begin{table}[!t]
+\caption{Caches et topologie m\'emoire}
+\label{tab:cpu-cache}
+\centering
+\small
+\begin{tabular}{p{0.43\columnwidth} p{0.47\columnwidth}}
+\toprule
+\textbf{Champ} & \textbf{Valeur} \\
+\midrule
+Cache L1d & 384 KiB (8 instances) \\
+Cache L1i & 512 KiB (8 instances) \\
+Cache L2 & 16 MiB (8 instances) \\
+Cache L3 & 24 MiB (1 instance) \\
+Nombre de noeuds NUMA & 1 \\
+CPU du noeud NUMA 0 & 0-15 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Ces valeurs ont \'et\'e mesur\'ees directement depuis WSL. Elles diff\`erent donc
+d'une configuration \`a l'autre selon la machine h\^ote et les ressources
+allou\'ees \`a l'environnement virtuel.
