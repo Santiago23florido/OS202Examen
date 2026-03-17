@@ -1,0 +1,13 @@
+\section{Question préliminaire}
+Il n'est pas représentatif, car la galaxie, dans une première approximation de simulation, peut être identifiée à une forme de disque plan qui ne présente pas une distribution considérable dans la direction \(Oz\). C'est justement cette condition de concentration sur l'axe \(z\) qui fait que l'implémentation de davantage de couches en \(N_k\) conduise à une complication considérable de la grille et de la distribution des éléments dans la grille, sans que l'approximation faite du système ne soit améliorée de manière significative.
+
+
+\section{Section a paralelizer}
+Pour l’évaluation du temps que représente chacune des étapes de la simulation, il est proposé de mesurer les temps. À chaque itération, un temps est pris avant et après le rendu, ainsi qu’un autre avant et après la mise à jour de la simulation, en utilisant \texttt{time.perf\_counter()}. Ces mesures sont prises à chaque frame, puis le temps consommé est moyenné toutes les 60 frames. Les résultats
+
+\begin{verbatim}
+[timing] 60 frames mesurées | avg_render=3.325 ms | avg_update=163.532 ms
+[timing] 120 frames mesurées | avg_render=3.344 ms | avg_update=165.161 ms
+\end{verbatim}
+
+montrent que la partie dominante du code se trouve dans le temps de mise à jour (\textit{update}), qui inclut les calculs des accélérations ainsi que les mises à jour des positions et des vitesses. Étant donné qu’il s’agit de la section dominante de la simulation, on considère que la section de calcul et de mise à jour des corps à l’intérieur de la grille est la plus susceptible d’être parallélisée.
