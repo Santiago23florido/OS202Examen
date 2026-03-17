@@ -249,37 +249,60 @@ class Visualizer3D:
         frame_count = 0
         measured_frames = 0
         total_render_time = 0.0
-        total_update_time = 0.0
+        total_updater_time = 0.0
+        total_copy_points_time = 0.0
+        stats = {
+            "measured_frames": 0,
+            "avg_render_ms": 0.0,
+            "avg_updater_ms": 0.0,
+            "avg_copy_points_ms": 0.0,
+        }
         try:
             while self.running:
                 self.running = self._handle_events()
                 render_start = time.perf_counter()
                 self._render()
                 render_end = time.perf_counter()
-                update_start = time.perf_counter()
+                updater_start = time.perf_counter()
+                points = None
                 if updater is not None:
-                    self.update_points(updater(dt))
-                update_end = time.perf_counter()
+                    points = updater(dt)
+                updater_end = time.perf_counter()
+                copy_points_start = time.perf_counter()
+                if points is not None:
+                    self.update_points(points)
+                copy_points_end = time.perf_counter()
                 frame_count += 1
                 render_ms = 1000.0 * (render_end - render_start)
-                update_ms = 1000.0 * (update_end - update_start)
+                updater_ms = 1000.0 * (updater_end - updater_start)
+                copy_points_ms = 1000.0 * (copy_points_end - copy_points_start)
                 if frame_count > self.warmup_frames:
                     measured_frames += 1
                     total_render_time += render_ms
-                    total_update_time += update_ms
+                    total_updater_time += updater_ms
+                    total_copy_points_time += copy_points_ms
                     if self.max_frames is not None and measured_frames >= self.max_frames:
                         self.running = False
         finally:
             if measured_frames > 0:
                 avg_render_ms = total_render_time / measured_frames
-                avg_update_ms = total_update_time / measured_frames
-                self._write_benchmark_row(measured_frames, avg_render_ms, avg_update_ms)
+                avg_updater_ms = total_updater_time / measured_frames
+                avg_copy_points_ms = total_copy_points_time / measured_frames
+                stats = {
+                    "measured_frames": measured_frames,
+                    "avg_render_ms": avg_render_ms,
+                    "avg_updater_ms": avg_updater_ms,
+                    "avg_copy_points_ms": avg_copy_points_ms,
+                }
+                self._write_benchmark_row(measured_frames, avg_render_ms, avg_updater_ms)
                 print(
                     f"measured_frames={measured_frames} "
                     f"avg_render_ms={avg_render_ms:.6f} "
-                    f"avg_update_ms={avg_update_ms:.6f}"
+                    f"avg_updater_ms={avg_updater_ms:.6f} "
+                    f"avg_copy_points_ms={avg_copy_points_ms:.6f}"
                 )
             self.cleanup()
+        return stats
 
     def cleanup(self):
         if self.vbo_vertices is not None:

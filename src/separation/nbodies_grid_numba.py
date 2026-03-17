@@ -1,8 +1,11 @@
 import argparse
+import csv
 import os
+import time
 
 import numpy as np
 import visualizer3d
+from mpi4py import MPI
 from numba import get_num_threads, njit, prange
 
 G = 1.560339e-13
@@ -230,7 +233,52 @@ def update_positions(dt: float):
     return system.positions
 
 
-def run_simulation(
+def assign_rank_affinity(comm):
+    if not hasattr(os, "sched_setaffinity"):
+        return None
+    cpu_count = os.cpu_count()
+    if cpu_count is None or cpu_count <= 0:
+        return None
+    rank = comm.Get_rank()
+    if rank == 0:
+        target_cpus = {0}
+    else:
+        target_cpus = set(range(1, cpu_count))
+        if not target_cpus:
+            target_cpus = {0}
+    os.sched_setaffinity(0, target_cpus)
+    return sorted(os.sched_getaffinity(0))
+
+
+def write_benchmark_row(csv_path, row):
+    if csv_path is None:
+        return
+    directory = os.path.dirname(csv_path)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+    fieldnames = list(row.keys())
+    file_exists = os.path.exists(csv_path)
+    with open(csv_path, "a", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        if not file_exists:
+            writer.writeheader()
+        writer.writerow(row)
+
+
+def build_metadata(filename, dt, ncells_per_dir, mpi_ranks):
+    return {
+        "threads": str(get_num_threads()),
+        "mpi_ranks": str(mpi_ranks),
+        "filename": os.path.abspath(filename),
+        "dt": str(dt),
+        "nx": str(ncells_per_dir[0]),
+        "ny": str(ncells_per_dir[1]),
+        "nz": str(ncells_per_dir[2]),
+    }
+
+
+def run_root(
+    comm,
     filename,
     geometry=(800, 600),
     ncells_per_dir: tuple[int, int, int] = (10, 10, 10),
@@ -244,14 +292,30 @@ def run_simulation(
     positions = system.positions
     colors = system.colors
     intensity = np.clip(system.masses / system.max_mass, 0.5, 1.0)
-    metadata = {
-        "threads": str(get_num_threads()),
-        "filename": os.path.abspath(filename),
-        "dt": str(dt),
-        "nx": str(ncells_per_dir[0]),
-        "ny": str(ncells_per_dir[1]),
-        "nz": str(ncells_per_dir[2]),
-    }
+    metadata = build_metadata(filename, dt, ncells_per_dir, comm.Get_size())
+    frame_count = 0
+    measured_frames = 0
+    total_root_command_time = 0.0
+    total_root_wait_result_time = 0.0
+
+    def mpi_updater(step_dt: float):
+        nonlocal frame_count
+        nonlocal measured_frames
+        nonlocal total_root_command_time
+        nonlocal total_root_wait_result_time
+        command_start = time.perf_counter()
+        comm.send({"command": "step", "dt": float(step_dt)}, dest=1, tag=0)
+        command_end = time.perf_counter()
+        wait_result_start = time.perf_counter()
+        updated_positions = comm.recv(source=1, tag=1)
+        wait_result_end = time.perf_counter()
+        frame_count += 1
+        if frame_count > warmup_frames:
+            measured_frames += 1
+            total_root_command_time += 1000.0 * (command_end - command_start)
+            total_root_wait_result_time += 1000.0 * (wait_result_end - wait_result_start)
+        return updated_positions
+
     visualizer = visualizer3d.Visualizer3D(
         positions,
         colors,
@@ -261,12 +325,152 @@ def run_simulation(
             [system.box[0][1], system.box[1][1]],
             [system.box[0][2], system.box[1][2]],
         ],
-        benchmark_csv=benchmark_csv,
+        benchmark_csv=None,
         warmup_frames=warmup_frames,
         max_frames=max_frames,
         metadata=metadata,
     )
-    visualizer.run(updater=update_positions, dt=dt)
+
+    render_stats = None
+    worker_stats = None
+    try:
+        render_stats = visualizer.run(updater=mpi_updater, dt=dt)
+    finally:
+        comm.send({"command": "stop"}, dest=1, tag=0)
+        worker_stats = comm.recv(source=1, tag=2)
+
+    measured_frames = worker_stats["measured_frames"]
+    avg_root_command_ms = 0.0
+    avg_root_wait_result_ms = 0.0
+    if measured_frames > 0:
+        avg_root_command_ms = total_root_command_time / measured_frames
+        avg_root_wait_result_ms = total_root_wait_result_time / measured_frames
+    avg_root_step_ms = render_stats["avg_updater_ms"]
+    avg_root_copy_points_ms = render_stats["avg_copy_points_ms"]
+    avg_worker_compute_ms = worker_stats["avg_worker_compute_ms"]
+    avg_worker_send_positions_ms = worker_stats["avg_worker_send_positions_ms"]
+    avg_coordination_overhead_ms = max(
+        0.0,
+        avg_root_step_ms - avg_root_command_ms - avg_worker_compute_ms - avg_worker_send_positions_ms,
+    )
+    row = {
+        "threads": metadata["threads"],
+        "mpi_ranks": metadata["mpi_ranks"],
+        "filename": metadata["filename"],
+        "dt": metadata["dt"],
+        "nx": metadata["nx"],
+        "ny": metadata["ny"],
+        "nz": metadata["nz"],
+        "warmup_frames": warmup_frames,
+        "measured_frames": measured_frames,
+        "avg_render_ms": f"{render_stats['avg_render_ms']:.6f}",
+        "avg_root_step_ms": f"{avg_root_step_ms:.6f}",
+        "avg_root_command_ms": f"{avg_root_command_ms:.6f}",
+        "avg_root_wait_result_ms": f"{avg_root_wait_result_ms:.6f}",
+        "avg_root_copy_points_ms": f"{avg_root_copy_points_ms:.6f}",
+        "avg_worker_compute_ms": f"{avg_worker_compute_ms:.6f}",
+        "avg_worker_send_positions_ms": f"{avg_worker_send_positions_ms:.6f}",
+        "avg_coordination_overhead_ms": f"{avg_coordination_overhead_ms:.6f}",
+        "avg_update_ms": f"{avg_worker_compute_ms:.6f}",
+    }
+    write_benchmark_row(benchmark_csv, row)
+    print(
+        f"measured_frames={measured_frames} "
+        f"avg_render_ms={render_stats['avg_render_ms']:.6f} "
+        f"avg_root_step_ms={avg_root_step_ms:.6f} "
+        f"avg_root_command_ms={avg_root_command_ms:.6f} "
+        f"avg_root_wait_result_ms={avg_root_wait_result_ms:.6f} "
+        f"avg_root_copy_points_ms={avg_root_copy_points_ms:.6f} "
+        f"avg_worker_compute_ms={avg_worker_compute_ms:.6f} "
+        f"avg_worker_send_positions_ms={avg_worker_send_positions_ms:.6f} "
+        f"avg_coordination_overhead_ms={avg_coordination_overhead_ms:.6f}"
+    )
+
+
+def run_worker(
+    comm,
+    filename,
+    ncells_per_dir: tuple[int, int, int] = (10, 10, 10),
+    warmup_frames=5,
+):
+    global system
+    system = NBodySystem(filename, ncells_per_dir=ncells_per_dir)
+    frame_count = 0
+    measured_frames = 0
+    total_worker_compute_time = 0.0
+    total_worker_send_positions_time = 0.0
+
+    while True:
+        message = comm.recv(source=0, tag=0)
+        command = message["command"]
+        if command == "step":
+            worker_compute_start = time.perf_counter()
+            system.update_positions(message["dt"])
+            worker_compute_end = time.perf_counter()
+            worker_send_positions_start = time.perf_counter()
+            comm.send(system.positions, dest=0, tag=1)
+            worker_send_positions_end = time.perf_counter()
+            frame_count += 1
+            if frame_count > warmup_frames:
+                measured_frames += 1
+                total_worker_compute_time += 1000.0 * (worker_compute_end - worker_compute_start)
+                total_worker_send_positions_time += 1000.0 * (worker_send_positions_end - worker_send_positions_start)
+        elif command == "stop":
+            avg_worker_compute_ms = 0.0
+            avg_worker_send_positions_ms = 0.0
+            if measured_frames > 0:
+                avg_worker_compute_ms = total_worker_compute_time / measured_frames
+                avg_worker_send_positions_ms = total_worker_send_positions_time / measured_frames
+            comm.send(
+                {
+                    "measured_frames": measured_frames,
+                    "avg_worker_compute_ms": avg_worker_compute_ms,
+                    "avg_worker_send_positions_ms": avg_worker_send_positions_ms,
+                },
+                dest=0,
+                tag=2,
+            )
+            break
+
+
+def run_simulation(
+    filename,
+    geometry=(800, 600),
+    ncells_per_dir: tuple[int, int, int] = (10, 10, 10),
+    dt=0.001,
+    warmup_frames=5,
+    max_frames=None,
+    benchmark_csv=None,
+):
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    size = comm.Get_size()
+
+    if size != 2:
+        if rank == 0:
+            raise SystemExit("This program requires exactly 2 MPI ranks.")
+        raise SystemExit(0)
+
+    assign_rank_affinity(comm)
+
+    if rank == 0:
+        run_root(
+            comm,
+            filename,
+            geometry=geometry,
+            ncells_per_dir=ncells_per_dir,
+            dt=dt,
+            warmup_frames=warmup_frames,
+            max_frames=max_frames,
+            benchmark_csv=benchmark_csv,
+        )
+    else:
+        run_worker(
+            comm,
+            filename,
+            ncells_per_dir=ncells_per_dir,
+            warmup_frames=warmup_frames,
+        )
 
 
 def build_argument_parser():
@@ -287,12 +491,15 @@ def build_argument_parser():
 if __name__ == "__main__":
     args = build_argument_parser().parse_args()
     grid_shape = (args.nx, args.ny, args.nz)
-    print(
-        f"simulation={os.path.abspath(args.filename)} "
-        f"dt={args.dt} "
-        f"grid={grid_shape} "
-        f"threads={get_num_threads()}"
-    )
+    rank = MPI.COMM_WORLD.Get_rank()
+    if rank == 0:
+        print(
+            f"simulation={os.path.abspath(args.filename)} "
+            f"dt={args.dt} "
+            f"grid={grid_shape} "
+            f"threads={get_num_threads()} "
+            f"mpi_ranks={MPI.COMM_WORLD.Get_size()}"
+        )
     run_simulation(
         args.filename,
         ncells_per_dir=grid_shape,

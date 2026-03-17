@@ -2,6 +2,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+MPIEXEC="${MPIEXEC:-mpiexec}"
+MPI_RANKS="${MPI_RANKS:-2}"
 PYTHON_BIN="${PYTHON_BIN:-$SCRIPT_DIR/../../.venv/bin/python}"
 DATASET="${DATASET:-$SCRIPT_DIR/../data/galaxy_1000}"
 DT="${DT:-0.001}"
@@ -12,14 +14,14 @@ WARMUP_FRAMES="${WARMUP_FRAMES:-5}"
 MAX_FRAMES="${MAX_FRAMES:-60}"
 THREADS="${THREADS:-1 2 3 4 5 6 7 8}"
 OUTPUT_DIR="${OUTPUT_DIR:-$SCRIPT_DIR/benchmark_csv}"
-CSV_FILE="${CSV_FILE:-$OUTPUT_DIR/numba_parallel_timings.csv}"
+CSV_FILE="${CSV_FILE:-$OUTPUT_DIR/mpi_separation_timings.csv}"
 
 mkdir -p "$OUTPUT_DIR"
 rm -f "$CSV_FILE"
 
 for thread_count in $THREADS; do
     echo "running threads=$thread_count"
-    NUMBA_NUM_THREADS="$thread_count" "$PYTHON_BIN" "$SCRIPT_DIR/nbodies_grid_numba.py" \
+    env NUMBA_NUM_THREADS="$thread_count" "$MPIEXEC" --bind-to none -n "$MPI_RANKS" "$PYTHON_BIN" "$SCRIPT_DIR/nbodies_grid_numba.py" \
         "$DATASET" "$DT" "$NX" "$NY" "$NZ" \
         --warmup-frames "$WARMUP_FRAMES" \
         --max-frames "$MAX_FRAMES" \
