@@ -1,5 +1,0 @@
-threads,mpi_ranks,filename,dt,nx,ny,nz,warmup_frames,measured_frames,avg_render_ms,avg_root_step_ms,avg_root_command_ms,avg_root_wait_result_ms,avg_root_copy_points_ms,avg_worker_compute_ms,avg_worker_send_positions_ms,avg_coordination_overhead_ms,avg_update_ms
-2,2,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,65,3.420508,13.689549,13.682305,0.000000,0.022571,13.682305,0.000000,0.000000,13.682305
-16,4,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,65,3.289593,4.522226,4.516883,0.000000,0.019077,4.516883,0.000000,0.000000,4.516883
-16,6,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,65,4.361516,5.664538,5.657495,0.000000,0.025999,5.657495,0.000000,0.000000,5.657495
-16,8,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,65,3.026745,2.331838,2.328257,0.000000,0.013848,2.328257,0.000000,0.000000,2.328257

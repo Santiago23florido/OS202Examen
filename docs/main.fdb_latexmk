@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1773736611.11461 "/home/santiago/OS202/Exam/docs/main.tex" "main.pdf" "main" 1773736611.62612 0
+["pdflatex"] 1773757334.03934 "/home/santiago/OS202/Exam/docs/main.tex" "main.pdf" "main" 1773757336.23392 0
   "/etc/texmf/web2c/texmf.cnf" 1762418151.39241 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/santiago/OS202/Exam/docs/main.tex" 1773736438.69011 834 d057e4f699da632e4226e0854e4f3950 ""
+  "/home/santiago/OS202/Exam/docs/main.tex" 1773756163.01219 937 ed8a3ed212e1ce8635db042fead9ed6e ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/courier/pcrb8r.tfm" 1136768653 1292 3059476c50a24578715759f22652f3d0 ""
@@ -29,6 +29,7 @@
   "/usr/share/texlive/texmf-dist/fonts/tfm/public/cm/cmsy9.tfm" 1136768653 1116 25a7bf822c58caf309a702ef79f4afbb ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1248133631 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
   "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb" 1248133631 36281 c355509802a035cadc5f15869451dcee ""
+  "/usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1248133631 35752 024fb6c41858982481f6968b5fc26508 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb" 1136849748 50493 4ed1f7e9eba8f1f3e1ec25195460190d ""
   "/usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb" 1136849748 45758 19968a0990191524e34e1994d4a31cb6 ""
   "/usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb" 1136849748 44729 811d6c62865936705a31c797a1d5dada ""
@@ -71,12 +72,18 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1762418170.6716 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1762418224 8214723 66b18d21e2ef1ecd23d5c483e8c60b4e ""
+  "images/mpi_separation_timings_non_symetriccpu.png" 1773740836.90995 187334 ef57725fbf87b0693d0e3ea4ec6986dc ""
+  "images/mpi_separation_timings_symetriccpu.png" 1773739800.20999 188111 ad765b6a334642c6099135069f55f6c1 ""
+  "images/mpi_subdomain_timings.png" 1773756139.68141 250245 dd7a8949b2b99c4e107dc600e569586e ""
   "images/numba_parallel_timings.png" 1773736223.51411 113037 176c19b29aa61d1c857b1a5a002f350d ""
-  "main.aux" 1773736611.5861 1294 229d720d0017e350b54ababd701112d4 "pdflatex"
-  "main.tex" 1773736438.69011 834 d057e4f699da632e4226e0854e4f3950 ""
+  "main.aux" 1773757336.19466 2499 73594d598c65719dd92f689379059fcd "pdflatex"
+  "main.tex" 1773756163.01219 937 ed8a3ed212e1ce8635db042fead9ed6e ""
   "sections/01_environnement.tex" 1773698415.3504 1791 65d1a8bf53d347ca78cf41f73775b9e4 ""
   "sections/02_preliminaires.tex" 1773734569.50617 1644 ea85d8dfb02ffe8a17a443341bf39895 ""
   "sections/03_numba.tex" 1773736610.8581 2241 c5e8cd3e8878d372ab992d0933355746 ""
+  "sections/04_separation.tex" 1773741140.61794 2826 503c2ab4b418ea42d245502ea3b5a526 ""
+  "sections/05_subdomain.tex" 1773757332.54336 3662 e4a36798bda21f4d9d0bc550530a7bf5 ""
+  "sections/06_barnes_hut.tex" 1773744817.74212 2324 c17b2ce221d988f53e69fca7c545a698 ""
   (generated)
   "main.aux"
   "main.log"

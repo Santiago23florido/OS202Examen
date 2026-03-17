@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.11.6)  17 MAR 2026 09:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.11.6)  17 MAR 2026 15:22
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -275,7 +275,41 @@ File: images/numba_parallel_timings.png Graphic file (type png)
 <use images/numba_parallel_timings.png>
 Package pdftex.def Info: images/numba_parallel_timings.png  used on input line 7.
 (pdftex.def)             Requested size: 252.0pt x 279.99924pt.
-)
+) (./sections/04_separation.tex
+Underfull \hbox (badness 1571) in paragraph at lines 5--6
+[]\T1/ptm/m/n/10 Dans l'im-plé-men-ta-tion, exac-te-ment 2 rangs MPI sont
+ []
+
+
+Underfull \hbox (badness 1533) in paragraph at lines 12--13
+[]\T1/ptm/m/n/10 afin que la ré-par-ti-tion ne soit pas ef-fec-tuée de ma-
+ []
+
+
+Underfull \hbox (badness 5064) in paragraph at lines 12--13
+\T1/ptm/m/n/10 une liai-son au-to-ma-tique qui gê-ne-rait l'exé-cu-tion ; en-
+ []
+
+<images/mpi_separation_timings_symetriccpu.png, id=16, 722.7pt x 1084.05pt>
+File: images/mpi_separation_timings_symetriccpu.png Graphic file (type png)
+<use images/mpi_separation_timings_symetriccpu.png>
+Package pdftex.def Info: images/mpi_separation_timings_symetriccpu.png  used on input line 16.
+(pdftex.def)             Requested size: 206.64185pt x 309.96648pt.
+<images/mpi_separation_timings_non_symetriccpu.png, id=17, 722.7pt x 1084.05pt>
+File: images/mpi_separation_timings_non_symetriccpu.png Graphic file (type png)
+<use images/mpi_separation_timings_non_symetriccpu.png>
+Package pdftex.def Info: images/mpi_separation_timings_non_symetriccpu.png  used on input line 23.
+(pdftex.def)             Requested size: 206.64185pt x 309.96648pt.
+) (./sections/05_subdomain.tex
+Underfull \vbox (badness 3780) has occurred while \output is active []
+
+ [2 <./images/numba_parallel_timings.png> <./images/mpi_separation_timings_symetriccpu.png>]
+<images/mpi_subdomain_timings.png, id=23, 1076.3412pt x 710.655pt>
+File: images/mpi_subdomain_timings.png Graphic file (type png)
+<use images/mpi_subdomain_timings.png>
+Package pdftex.def Info: images/mpi_subdomain_timings.png  used on input line 12.
+(pdftex.def)             Requested size: 206.64185pt x 136.43553pt.
+) (./sections/06_barnes_hut.tex [3 <./images/mpi_separation_timings_non_symetriccpu.png> <./images/mpi_subdomain_timings.png>])
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -287,27 +321,27 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[2
+[4
 
- <./images/numba_parallel_timings.png>] (./main.aux)
+] (./main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 4543 strings out of 474222
- 77406 string characters out of 5748733
+ 4589 strings out of 474222
+ 79132 string characters out of 5748733
  1945975 words of memory out of 5000000
- 26761 multiletter control sequences out of 15000+600000
+ 26798 multiletter control sequences out of 15000+600000
  667527 words of font info for 137 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,10n,65p,1276b,428s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (2 pages, 180707 bytes).
+ 57i,10n,65p,1710b,428s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on main.pdf (4 pages, 753951 bytes).
 PDF statistics:
- 55 PDF objects out of 1000 (max. 8388607)
- 32 compressed objects within 1 object stream
+ 72 PDF objects out of 1000 (max. 8388607)
+ 39 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 

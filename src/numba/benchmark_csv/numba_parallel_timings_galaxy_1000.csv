@@ -1,0 +1,5 @@
+threads,filename,dt,nx,ny,nz,warmup_frames,measured_frames,avg_render_ms,avg_update_ms
+1,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,60,4.433521,19.571925
+2,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,60,3.838796,9.719893
+4,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,60,3.226805,5.456237
+5,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,60,3.609334,5.828761
