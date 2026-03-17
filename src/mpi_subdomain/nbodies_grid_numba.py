@@ -702,6 +702,7 @@ def compute_local_accelerations(
 class SerialNBodySystem:
     def __init__(self, filename, ncells_per_dir: tuple[int, int, int] = (10, 10, 10)):
         positions, velocities, masses, box, max_mass, colors = load_dataset(filename)
+        self.body_ids = np.arange(positions.shape[0], dtype=np.int64)
         self.positions = positions
         self.velocities = velocities
         self.masses = masses
@@ -712,9 +713,21 @@ class SerialNBodySystem:
         self.grid_min = np.array(self.box[0], dtype=np.float32)
         self.grid_max = np.array(self.box[1], dtype=np.float32)
         self.cell_size = (self.grid_max - self.grid_min) / self.n_cells
-        self.cell_masses = np.zeros(np.prod(self.n_cells), dtype=np.float32)
-        self.cell_com_positions = np.zeros((np.prod(self.n_cells), 3), dtype=np.float32)
+        n_global_cells = int(np.prod(self.n_cells))
+        self.cell_masses = np.zeros(n_global_cells, dtype=np.float32)
+        self.cell_com_positions = np.zeros((n_global_cells, 3), dtype=np.float32)
+        self.local_cell_ranges = np.array(
+            [[0, self.n_cells[axis]] for axis in range(3)],
+            dtype=np.int64,
+        )
+        self.local_cell_dims = self.local_cell_ranges[:, 1] - self.local_cell_ranges[:, 0]
+        n_local_cells = int(np.prod(self.local_cell_dims))
+        self.local_cell_start_indices = np.full(n_local_cells + 1, -1, dtype=np.int64)
+        self.local_body_indices = np.empty(self.positions.shape[0], dtype=np.int64)
+        self.local_cell_masses = np.zeros(n_local_cells, dtype=np.float32)
+        self.local_cell_com_positions = np.zeros((n_local_cells, 3), dtype=np.float32)
         self.update_global_grid()
+        self.build_local_grid()
 
     def update_global_grid(self):
         update_stars_in_grid_global(
@@ -727,17 +740,49 @@ class SerialNBodySystem:
             self.n_cells,
         )
 
-    def step(self, dt):
-        accel_pre_start = time.perf_counter()
-        acceleration = compute_global_accelerations(
+    def build_local_grid(self):
+        n_local_cells = int(np.prod(self.local_cell_dims))
+        self.local_cell_start_indices = np.full(n_local_cells + 1, -1, dtype=np.int64)
+        self.local_body_indices = np.empty(self.positions.shape[0], dtype=np.int64)
+        self.local_cell_masses = np.zeros(n_local_cells, dtype=np.float32)
+        self.local_cell_com_positions = np.zeros((n_local_cells, 3), dtype=np.float32)
+        update_stars_in_grid_local(
+            self.local_cell_start_indices,
+            self.local_body_indices,
+            self.local_cell_masses,
+            self.local_cell_com_positions,
             self.positions,
             self.masses,
+            self.grid_min,
+            self.cell_size,
+            self.n_cells,
+            self.local_cell_ranges,
+            self.local_cell_dims,
+        )
+
+    def compute_accelerations(self):
+        return compute_local_accelerations(
+            self.body_ids,
+            self.positions,
+            self.body_ids,
+            self.positions,
+            self.masses,
+            self.local_cell_start_indices,
+            self.local_body_indices,
+            self.local_cell_masses,
+            self.local_cell_com_positions,
             self.cell_masses,
             self.cell_com_positions,
             self.grid_min,
             self.cell_size,
             self.n_cells,
+            self.local_cell_ranges,
+            self.local_cell_dims,
         )
+
+    def step(self, dt):
+        accel_pre_start = time.perf_counter()
+        acceleration = self.compute_accelerations()
         accel_pre_end = time.perf_counter()
         position_update_start = time.perf_counter()
         self.positions += self.velocities * dt + 0.5 * acceleration * dt * dt
@@ -745,16 +790,11 @@ class SerialNBodySystem:
         global_grid_start = time.perf_counter()
         self.update_global_grid()
         global_grid_end = time.perf_counter()
+        local_grid_start = time.perf_counter()
+        self.build_local_grid()
+        local_grid_end = time.perf_counter()
         accel_post_start = time.perf_counter()
-        new_acceleration = compute_global_accelerations(
-            self.positions,
-            self.masses,
-            self.cell_masses,
-            self.cell_com_positions,
-            self.grid_min,
-            self.cell_size,
-            self.n_cells,
-        )
+        new_acceleration = self.compute_accelerations()
         accel_post_end = time.perf_counter()
         velocity_update_start = time.perf_counter()
         self.velocities += 0.5 * (acceleration + new_acceleration) * dt
@@ -765,7 +805,7 @@ class SerialNBodySystem:
             "worker_migration_ms": 0.0,
             "worker_global_grid_ms": 1000.0 * (global_grid_end - global_grid_start),
             "worker_ghost_exchange_ms": 0.0,
-            "worker_local_grid_ms": 0.0,
+            "worker_local_grid_ms": 1000.0 * (local_grid_end - local_grid_start),
             "worker_accel_post_ms": 1000.0 * (accel_post_end - accel_post_start),
             "worker_velocity_update_ms": 1000.0 * (velocity_update_end - velocity_update_start),
         }
@@ -801,12 +841,25 @@ class WorkerSubdomain:
         )
         self.ghost_cell_dims = self.ghost_cell_ranges[:, 1] - self.ghost_cell_ranges[:, 0]
         self.owner_coord_by_axis = []
+        self.ghost_owner_coords_by_axis = []
         for axis in range(3):
             owners = np.empty(self.nb_cells_per_dim[axis], dtype=np.int32)
+            axis_ranges = []
             for coord in range(self.proc_grid[axis]):
                 start, end = self._get_cell_range(coord, self.proc_grid[axis], self.nb_cells_per_dim[axis])
+                axis_ranges.append((start, end))
                 owners[start:end] = coord
             self.owner_coord_by_axis.append(owners)
+            ghost_owner_coords = []
+            for cell_idx in range(self.nb_cells_per_dim[axis]):
+                coords = []
+                for coord, (start, end) in enumerate(axis_ranges):
+                    ghost_start = max(0, start - GHOST_LAYER)
+                    ghost_end = min(self.nb_cells_per_dim[axis], end + GHOST_LAYER)
+                    if ghost_start <= cell_idx < ghost_end:
+                        coords.append(coord)
+                ghost_owner_coords.append(tuple(coords))
+            self.ghost_owner_coords_by_axis.append(ghost_owner_coords)
 
     @staticmethod
     def _get_proc_coords(rank, proc_grid):
@@ -850,15 +903,10 @@ class WorkerSubdomain:
         return self.owner_rank_for_cell_idx(self.clamp_cell_index(position, grid_min, cell_size, n_cells))
 
     def ghost_recipient_ranks_for_cell_idx(self, cell_idx):
-        coord_candidates = []
-        for axis in range(3):
-            local_start, local_end = self.local_cell_ranges[axis]
-            axis_candidates = [self.proc_coords[axis]]
-            if cell_idx[axis] < local_start + GHOST_LAYER and self.proc_coords[axis] > 0:
-                axis_candidates.append(self.proc_coords[axis] - 1)
-            if cell_idx[axis] >= local_end - GHOST_LAYER and self.proc_coords[axis] < self.proc_grid[axis] - 1:
-                axis_candidates.append(self.proc_coords[axis] + 1)
-            coord_candidates.append(sorted(set(axis_candidates)))
+        coord_candidates = [
+            self.ghost_owner_coords_by_axis[axis][int(cell_idx[axis])]
+            for axis in range(3)
+        ]
         recipients = set()
         for coords in product(*coord_candidates):
             rank = self.coords_to_rank(coords)

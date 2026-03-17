@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1773757334.03934 "/home/santiago/OS202/Exam/docs/main.tex" "main.pdf" "main" 1773757336.23392 0
+["pdflatex"] 1773759277.93129 "/home/santiago/OS202/Exam/docs/main.tex" "main.pdf" "main" 1773759279.21372 0
   "/etc/texmf/web2c/texmf.cnf" 1762418151.39241 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/santiago/OS202/Exam/docs/main.tex" 1773756163.01219 937 ed8a3ed212e1ce8635db042fead9ed6e ""
+  "/home/santiago/OS202/Exam/docs/main.tex" 1773759277.66596 937 ed8a3ed212e1ce8635db042fead9ed6e ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/courier/pcrb8r.tfm" 1136768653 1292 3059476c50a24578715759f22652f3d0 ""
@@ -74,10 +74,10 @@
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1762418224 8214723 66b18d21e2ef1ecd23d5c483e8c60b4e ""
   "images/mpi_separation_timings_non_symetriccpu.png" 1773740836.90995 187334 ef57725fbf87b0693d0e3ea4ec6986dc ""
   "images/mpi_separation_timings_symetriccpu.png" 1773739800.20999 188111 ad765b6a334642c6099135069f55f6c1 ""
-  "images/mpi_subdomain_timings.png" 1773756139.68141 250245 dd7a8949b2b99c4e107dc600e569586e ""
+  "images/mpi_subdomain_timings.png" 1773759254.70196 241622 faa4e7136038afd6d704f5f155f57899 ""
   "images/numba_parallel_timings.png" 1773736223.51411 113037 176c19b29aa61d1c857b1a5a002f350d ""
-  "main.aux" 1773757336.19466 2499 73594d598c65719dd92f689379059fcd "pdflatex"
-  "main.tex" 1773756163.01219 937 ed8a3ed212e1ce8635db042fead9ed6e ""
+  "main.aux" 1773759279.17396 2499 73594d598c65719dd92f689379059fcd "pdflatex"
+  "main.tex" 1773759277.66596 937 ed8a3ed212e1ce8635db042fead9ed6e ""
   "sections/01_environnement.tex" 1773698415.3504 1791 65d1a8bf53d347ca78cf41f73775b9e4 ""
   "sections/02_preliminaires.tex" 1773734569.50617 1644 ea85d8dfb02ffe8a17a443341bf39895 ""
   "sections/03_numba.tex" 1773736610.8581 2241 c5e8cd3e8878d372ab992d0933355746 ""
