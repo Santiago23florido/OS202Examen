@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.11.6)  17 MAR 2026 09:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2025.11.6)  17 MAR 2026 09:36
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -266,6 +266,15 @@ Overfull \hbox (192.0pt too wide) in paragraph at lines 11--11
 []\T1/pcr/m/n/10 [timing] 120 frames mesurées | avg_render=3.344 ms | avg_update=165.161 ms[] 
  []
 
+) (./sections/03_numba.tex [1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}
+
+
+]
+<images/numba_parallel_timings.png, id=14, 650.43pt x 722.7pt>
+File: images/numba_parallel_timings.png Graphic file (type png)
+<use images/numba_parallel_timings.png>
+Package pdftex.def Info: images/numba_parallel_timings.png  used on input line 7.
+(pdftex.def)             Requested size: 252.0pt x 279.99924pt.
 )
 
 ** Conference Paper **
@@ -278,28 +287,27 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[1{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}
+[2
 
-
-] (./main.aux)
+ <./images/numba_parallel_timings.png>] (./main.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 4525 strings out of 474222
- 76880 string characters out of 5748733
- 1942975 words of memory out of 5000000
- 26746 multiletter control sequences out of 15000+600000
+ 4543 strings out of 474222
+ 77406 string characters out of 5748733
+ 1945975 words of memory out of 5000000
+ 26761 multiletter control sequences out of 15000+600000
  667527 words of font info for 137 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,10n,65p,650b,428s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 57i,10n,65p,1276b,428s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (1 page, 85925 bytes).
+Output written on main.pdf (2 pages, 180707 bytes).
 PDF statistics:
- 49 PDF objects out of 1000 (max. 8388607)
- 29 compressed objects within 1 object stream
+ 55 PDF objects out of 1000 (max. 8388607)
+ 32 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

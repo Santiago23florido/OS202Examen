@@ -165,6 +165,9 @@ INPUT /usr/share/texlive/texmf-dist/fonts/tfm/adobe/courier/pcrr8t.tfm
 INPUT ./sections/02_preliminaires.tex
 INPUT ./sections/02_preliminaires.tex
 INPUT sections/02_preliminaires.tex
+INPUT ./sections/03_numba.tex
+INPUT ./sections/03_numba.tex
+INPUT sections/03_numba.tex
 OUTPUT main.pdf
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/adobe/times/ptmr8t.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/adobe/times/ptmr8r.tfm
@@ -190,6 +193,12 @@ INPUT /usr/share/texlive/texmf-dist/fonts/vf/adobe/courier/pcrr8t.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/adobe/courier/pcrr8r.tfm
 INPUT /usr/share/texlive/texmf-dist/fonts/vf/adobe/times/ptmri8t.vf
 INPUT /usr/share/texlive/texmf-dist/fonts/tfm/adobe/times/ptmri8r.tfm
+INPUT ./images/numba_parallel_timings.png
+INPUT ./images/numba_parallel_timings.png
+INPUT ./images/numba_parallel_timings.png
+INPUT ./images/numba_parallel_timings.png
+INPUT ./images/numba_parallel_timings.png
+INPUT /usr/share/texlive/texmf-dist/fonts/vf/adobe/times/ptmr8t.vf
 INPUT main.aux
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb

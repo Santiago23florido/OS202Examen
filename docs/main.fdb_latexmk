@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1773735087.9971 "/home/santiago/OS202/Exam/docs/main.tex" "main.pdf" "main" 1773735088.40719 0
+["pdflatex"] 1773736611.11461 "/home/santiago/OS202/Exam/docs/main.tex" "main.pdf" "main" 1773736611.62612 0
   "/etc/texmf/web2c/texmf.cnf" 1762418151.39241 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/santiago/OS202/Exam/docs/main.tex" 1773735087.73415 805 7bba44962e4c219145b356656e192e89 ""
+  "/home/santiago/OS202/Exam/docs/main.tex" 1773736438.69011 834 d057e4f699da632e4226e0854e4f3950 ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/courier/pcrb8r.tfm" 1136768653 1292 3059476c50a24578715759f22652f3d0 ""
@@ -71,10 +71,12 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1762418170.6716 5472669 54eaf61a88b6b7896ebd0dac973cb29c ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1762418224 8214723 66b18d21e2ef1ecd23d5c483e8c60b4e ""
-  "main.aux" 1773735088.37016 893 63c86de4e783aa3985ae3468373c60a4 "pdflatex"
-  "main.tex" 1773735087.73415 805 7bba44962e4c219145b356656e192e89 ""
+  "images/numba_parallel_timings.png" 1773736223.51411 113037 176c19b29aa61d1c857b1a5a002f350d ""
+  "main.aux" 1773736611.5861 1294 229d720d0017e350b54ababd701112d4 "pdflatex"
+  "main.tex" 1773736438.69011 834 d057e4f699da632e4226e0854e4f3950 ""
   "sections/01_environnement.tex" 1773698415.3504 1791 65d1a8bf53d347ca78cf41f73775b9e4 ""
   "sections/02_preliminaires.tex" 1773734569.50617 1644 ea85d8dfb02ffe8a17a443341bf39895 ""
+  "sections/03_numba.tex" 1773736610.8581 2241 c5e8cd3e8878d372ab992d0933355746 ""
   (generated)
   "main.aux"
   "main.log"

@@ -1,0 +1,9 @@
+threads,filename,dt,nx,ny,nz,warmup_frames,measured_frames,avg_render_ms,avg_update_ms
+1,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,60,3.211383,14.993087
+2,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,60,3.207085,8.387404
+3,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,60,4.767838,10.668966
+4,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,60,4.163566,7.541134
+5,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,60,3.662545,6.174518
+6,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,60,4.150921,6.532064
+7,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,60,4.488761,6.611235
+8,/home/santiago/OS202/Exam/src/data/galaxy_1000,0.001,20,20,1,5,60,3.286054,4.438524
